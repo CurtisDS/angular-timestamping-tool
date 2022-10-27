@@ -4,8 +4,6 @@
 
 .input-spinner-controls {
   display: inline;
-  width: 0;
-  line-height: 0px;
   position: relative;
   margin-left: -20px;
   margin-right: 20px;
