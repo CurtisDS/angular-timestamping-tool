@@ -28,7 +28,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // initialize the timestring to zeros
-    this.timeString = '--:--:--';
+    this.timeString = '00:00:00';
     // initialize the datestring to now
     this.dateString = moment().format('MMM DD HH:mm:ss');
 
@@ -44,7 +44,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
         }
       } else {
         // there are no splits, reinitialize the time and date strings
-        this.timeString = '--:--:--';
+        this.timeString = '00:00:00';
         this.dateString = moment().format('MMM DD HH:mm:ss');
       }
       // increase the history interval
