@@ -1,0 +1,33 @@
+<app-controls class="controls"></app-controls>
+<content>
+  <ng-container *ngIf="viewState === ViewStates.Edit">
+    <div class="timestamps" [class.reverseSort]="sortState === SortStates.RevChron">
+      <ng-container *ngFor="let time of timeservice.times; let i = index">
+        <app-timestamp [timestampIndex]="i"></app-timestamp>
+      </ng-container>
+    </div>
+    <div class="noTimestamps" *ngIf="timeservice.times?.length == 0">
+      - Not Started -
+    </div>
+  </ng-container>
+  <ng-container *ngIf="viewState === ViewStates.Code">
+    <button
+      mat-mini-fab
+      color="none"
+      class="copy"
+      (click)="copyTimestamps()"
+      *ngIf="timeservice.times?.length != 0"
+      title="copy timestamps"
+    >
+      <mat-icon>file_copy</mat-icon>
+    </button>
+    <div class="timestamps">
+        <span *ngFor="let time of timeservice.times; let i = index">
+          {{ getTimeStampText(i) }}<br>
+        </span>
+    </div>
+    <div class="noTimestamps" *ngIf="timeservice.times?.length == 0">
+      - Not Started -
+    </div>
+  </ng-container>
+</content>

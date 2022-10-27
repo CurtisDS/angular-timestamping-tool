@@ -1,0 +1,34 @@
+.noTimestamps {
+  margin: auto;
+  text-align: center;
+  opacity: 0.5;
+  margin-top: 1em;
+}
+
+.controls {
+  margin-bottom: 1em;
+}
+
+.timestamps {
+  display: flex;
+  flex-direction: column;
+  margin: 0 1em;
+}
+
+.timestamps.reverseSort {
+  flex-direction: column-reverse;
+}
+
+.copy {
+  position: absolute;
+  z-index: 100;
+  align-self: end;
+  margin-right: 1em;
+}
+
+content {
+  max-width: 1024px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}

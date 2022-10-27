@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="flex-container time">
+    <code [title]="dateString">{{ diffString }}</code>
+    <app-spinner
+      placeholder="Sec"
+      [(ngModel)]="this.savedTime.offsetSeconds"
+      [min]="getMin()"
+      [max]="getMax()"
+      title="adjust time (seconds)"
+    ></app-spinner>
+  </div>
+  <div class="flex-container description">
+    <mat-form-field appearance="fill" class="textArea">
+      <mat-label>Split {{ timestampIndex + 1 }}</mat-label>
+      <textarea
+        matInput
+        placeholder="Description"
+        class="textAreaInput"
+        [(ngModel)]="this.savedTime.label"
+      ></textarea>
+    </mat-form-field>
+  </div>
+  <div class="flex-container buttons">
+    <table>
+      <tr>
+        <td>
+          <button
+            class="grid-item mat-elevation-z1"
+            color="warn"
+            mat-mini-fab
+            (click)="delete()"
+            [disabled]="!canDelete"
+            [style.visibility]="canDelete?'visible':'hidden'">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </table>
+    <div style="flex:0">&nbsp;<!--adjust for material input hint size--></div>
+  </div>
+</div>

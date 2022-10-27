@@ -1,0 +1,23 @@
+<mat-form-field appearance="fill" [class.has-fine-input]="isPointerFine">
+  <mat-label>-/+</mat-label>
+  <input
+  [id]="id" 
+  [type]="inputType"
+  [(ngModel)]="valueNum"
+  [placeholder]="placeholder == null ? '' : placeholder"
+  (keydown)="numberKeyListener($event)"
+  (change)="change($event)"
+  (blur)="blur($event)"
+  [readonly]="getReadonly()"
+  [disabled]="disabled"
+  [name]="name"
+  [attr.size]="size"
+  [maxlength]="maxlength"
+  [required]="getRequired()"
+  [title]="title"
+  #elem matInput />
+  <div class="input-spinner-controls" *ngIf="isPointerFine">
+    <button class="input-spinner-up" tabindex="-1" (click)="stepUp(elem)">^</button>
+    <button class="input-spinner-down" tabindex="-1" (click)="stepDown(elem)">^</button>
+  </div>
+</mat-form-field>

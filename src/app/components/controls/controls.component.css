@@ -1,0 +1,39 @@
+:host() {
+  display: block;
+}
+
+code {
+  font-family: 'alarm clock';
+  font-weight: 800;
+  font-size: 18pt;
+  background-color: black;
+  color: greenyellow;
+  padding: 10px;
+  border-radius: 6px;
+  display: inline-block;
+  width: 100px;
+}
+
+.main-row {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 0.5em;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.codebtn {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.row {
+  max-width: 1024px;
+  margin: auto;
+}
+
+.flip {
+  transform: scaleY(-1);
+}

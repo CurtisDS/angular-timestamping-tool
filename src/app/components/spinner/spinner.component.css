@@ -1,0 +1,36 @@
+:host() {
+  display: contents;
+}
+
+.input-spinner-controls {
+  display: inline;
+  width: 0;
+  line-height: 0px;
+  position: relative;
+  margin-left: -20px;
+  margin-right: 20px;
+}
+
+.input-spinner-up,
+.input-spinner-down {
+  line-height: 4px;
+  border-radius: 0px;
+  border: none;
+  margin: 0;
+  padding-top: 5px;
+  font-weight: bold;
+  color:rgb(117, 117, 117);
+  overflow: hidden;
+  position: absolute;
+  top: -1px;
+}
+
+.input-spinner-down {
+  transform: scale(-1);
+  top: 50%;
+}
+
+.has-fine-input input {
+  padding-right: 1.5em;
+  width: calc(100% - 1em);
+}

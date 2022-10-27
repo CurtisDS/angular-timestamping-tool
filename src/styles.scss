@@ -1,0 +1,13 @@
+/* Add application styles & imports to this file! */
+@font-face {
+  font-family: 'alarm clock';
+  font-style: normal;
+  font-weight: 400;
+  src: local('alarm clock'),
+    url('https://fonts.cdnfonts.com/s/71615/alarm clock.woff') format('woff');
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
