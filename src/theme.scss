@@ -39,16 +39,15 @@ $theme: mat.define-light-theme(
 // that you are using.
 @include mat.all-component-themes($theme);
 
+// Create classes for custom colors to be used with buttons
 .mat-go {
   background-color: mat.get-color-from-palette($theme-go, 'A400');
   color: mat.get-color-from-palette($theme-go, 'A400-contrast');
 }
-
 .mat-alt-warn {
   background-color: mat.get-color-from-palette($theme-alt-warn);
   color: mat.get-color-from-palette($theme-alt-warn, '-contrast');
 }
-
 .mat-split {
   background-color: mat.get-color-from-palette($theme-split);
   color: mat.get-color-from-palette($theme-split, '-contrast');

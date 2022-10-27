@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { HelloComponent } from './hello.component';
 import { TimestampComponent } from './components/timestamp/timestamp.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,7 +20,7 @@ import { ControlsComponent } from './components/controls/controls.component';
     MatNativeDateModule,
     MaterialExampleModule,
     ReactiveFormsModule ],
-  declarations: [ AppComponent, HelloComponent, TimestampComponent, SpinnerComponent, ControlsComponent ],
+  declarations: [ AppComponent, TimestampComponent, SpinnerComponent, ControlsComponent ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

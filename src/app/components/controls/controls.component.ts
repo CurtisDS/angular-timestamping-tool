@@ -1,11 +1,7 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import moment = require('moment');
-import {
-  SavedTime,
-  TimesService,
-  TimestampState,
-} from '../../services/times.service';
+import { Component, OnInit, OnDestroy, HostListener, Input } from '@angular/core';
+import { SavedTime, TimesService, TimestampState } from '../../services/times.service';
 import { SortState, ViewState, ViewStateService } from '../../services/view-state.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-controls',
@@ -14,6 +10,9 @@ import { SortState, ViewState, ViewStateService } from '../../services/view-stat
 })
 export class ControlsComponent implements OnInit, OnDestroy {
   constructor(private timeservice: TimesService, private viewstateservice: ViewStateService) {}
+
+  /** the heading to use in this component */
+  @Input() name: string;
 
   dateString: string;
   timeString: string;

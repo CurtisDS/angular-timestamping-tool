@@ -1,9 +1,12 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row class="row">
-    <h1>Timestamps</h1>
+    <!--heading text-->
+    <h1>{{name}}</h1>
   </mat-toolbar-row>
   <mat-toolbar-row class="main-row row">
+    <!--timestamp string-->
     <code [title]="dateString">{{ timeString }}</code>
+    <!--buttons while running-->
     <ng-container *ngIf="isRunning; else notRunning">
       <button mat-mini-fab color="alt-warn" title="pause" (click)="stop()">
         <mat-icon>pause</mat-icon>
@@ -12,6 +15,7 @@
         <mat-icon>flag</mat-icon>
       </button>
     </ng-container>
+    <!--buttons while not running-->
     <ng-template #notRunning>
       <button mat-mini-fab color="go" title="play" (click)="play()">
         <mat-icon>play_arrow</mat-icon>
@@ -20,21 +24,25 @@
         <mat-icon>delete_sweep</mat-icon>
       </button>
     </ng-template>
+    <!--flex spacer-->
     <span class="spacer"></span>
-
+    <!--sort buttons-->
     <button mat-icon-button title="sort chronologically" class="sort" (click)="sortChron()" *ngIf="!isChronological">
       <mat-icon class="flip">sort</mat-icon>
+      <!--chronologically-->
     </button>
-
     <button mat-icon-button title="sort reverse chronologically" class="sort" (click)="sortRevChron()" *ngIf="isChronological">
       <mat-icon>sort</mat-icon>
+      <!--reverse chronologically-->
     </button>
-
+    <!--view state buttons-->
     <button mat-mini-fab color="accent" class="codebtn" title="view code" (click)="codeView()" *ngIf="!isCodeViewState">
       <mat-icon>code</mat-icon>
+      <!--code state-->
     </button>
     <button mat-mini-fab color="accent" class="codebtn" title="hide code" (click)="editView()" *ngIf="isCodeViewState">
       <mat-icon>code_off</mat-icon>
+      <!--edit state-->
     </button>
   </mat-toolbar-row>
 </mat-toolbar>

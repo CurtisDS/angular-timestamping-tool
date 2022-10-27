@@ -1,14 +1,16 @@
 <div class="row">
   <div class="flex-container time">
+    <!--timestamp-->
     <code [title]="dateString">{{ diffString }}</code>
+    <!--offset input-->
     <app-spinner
       placeholder="Sec"
       [(ngModel)]="this.savedTime.offsetSeconds"
       [min]="getMin()"
       [max]="getMax()"
-      title="adjust time (seconds)"
-    ></app-spinner>
+      title="adjust time (seconds)"></app-spinner>
   </div>
+  <!--description input-->
   <div class="flex-container description">
     <mat-form-field appearance="fill" class="textArea">
       <mat-label>Split {{ timestampIndex + 1 }}</mat-label>
@@ -24,6 +26,7 @@
     <table>
       <tr>
         <td>
+          <!--delete timestamp button-->
           <button
             class="grid-item mat-elevation-z1"
             color="warn"
@@ -36,6 +39,6 @@
         </td>
       </tr>
     </table>
-    <div style="flex:0">&nbsp;<!--adjust for material input hint size--></div>
+    <div style="flex:0">&nbsp;<!--space adjustment to make up for material input hint size--></div>
   </div>
 </div>

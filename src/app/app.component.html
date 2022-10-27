@@ -1,33 +1,32 @@
-<app-controls class="controls"></app-controls>
+<!--include a control strip-->
+<app-controls class="controls" [name]="name"></app-controls>
 <content>
   <ng-container *ngIf="viewState === ViewStates.Edit">
+    <!--if we are in Edit mode create a app-timestamp component for each split-->
     <div class="timestamps" [class.reverseSort]="sortState === SortStates.RevChron">
       <ng-container *ngFor="let time of timeservice.times; let i = index">
         <app-timestamp [timestampIndex]="i"></app-timestamp>
       </ng-container>
     </div>
-    <div class="noTimestamps" *ngIf="timeservice.times?.length == 0">
-      - Not Started -
-    </div>
   </ng-container>
   <ng-container *ngIf="viewState === ViewStates.Code">
-    <button
-      mat-mini-fab
-      color="none"
-      class="copy"
-      (click)="copyTimestamps()"
-      *ngIf="timeservice.times?.length != 0"
-      title="copy timestamps"
-    >
+    <!--if we are in Code mode-->
+    <button mat-mini-fab color="none" class="copy" (click)="copyTimestamps()"
+      *ngIf="timeservice.times?.length != 0" title="copy timestamps">
+      <!--include a copy button to add the text time splits to clipboard-->
       <mat-icon>file_copy</mat-icon>
     </button>
+    <!--create a simple string for each split-->
     <div class="timestamps">
         <span *ngFor="let time of timeservice.times; let i = index">
           {{ getTimeStampText(i) }}<br>
         </span>
     </div>
-    <div class="noTimestamps" *ngIf="timeservice.times?.length == 0">
-      - Not Started -
-    </div>
   </ng-container>
+  <!--if there are no time splits include a simple message to show you havent started yet-->
+  <div class="noTimestamps" *ngIf="timeservice.times?.length == 0">
+    - Not Started -
+  </div>
 </content>
+
+<img scr="screenshot1.png" />
