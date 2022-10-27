@@ -135,7 +135,15 @@ export class SpinnerComponent implements OnInit, ControlValueAccessor {
       // remove non number characters not includeing math symbols
       let valString: string = this.valueNum.toString().replace(/[^0-9\*\-\/\^\+\.\e\E\(\)\%]/g, '');
       // eval the text string, this adds simple math support to the input field
-      let val: number = parseFloat(eval(valString));
+      let evaled: any;
+      try {
+        evaled = eval(valString);
+      } catch(e) {
+        // if the eval fails just set the value to 0
+        evaled = "0";
+      }
+      // parse the evaluated string to a float
+      let val: number = parseFloat(evaled);
       // normalize the new value (make sure its not over the max etc)
       this.normalizeValue(val, elem);
     } else {
