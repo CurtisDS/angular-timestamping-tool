@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SavedTime, TimesService } from '../../services/times.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-timestamp',
@@ -34,14 +35,15 @@ export class TimestampComponent implements OnInit {
 
   /** return the max value for the offset input control */
   getMax(): number|null {
-    // if there is a timestamp after this one
+    // create a moment to act as a limit. Default it to the current time.
+    let limit = moment();
+    // if there is a timestamp after this one use that timestamp instead
     if (this.timeservice.times?.length - 1 > this.timestampIndex) {
-      //check its adjusted value and return a max value that will prevent overlapping that timestamp
-      return this.timeservice.times[this.timestampIndex + 1]
-        .getAdjustedTime()
-        .diff(this.savedTime.value, 'seconds');
+      // get its adjusted value
+      limit = this.timeservice.times[this.timestampIndex + 1].getAdjustedTime();
     }
-    return null;
+    // return a max value that will prevent overlapping either now or the next timestamp
+    return limit.diff(this.savedTime.value, 'seconds');
   }
 
   /** get the adjusted difference between this timestamp and the starting timestamp formated as HH:mm:ss */
