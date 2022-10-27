@@ -2,4 +2,4 @@
 
 An app to allow you to create timestamps
 
-![screenshot 1](https://github.com/CurtisDS/Angular-Timestamping-Tool/blob/master/screenshit1.png?raw=true)
+![screenshot 1](https://raw.githubusercontent.com/CurtisDS/Angular-Timestamping-Tool/main/screenshot1.png)
