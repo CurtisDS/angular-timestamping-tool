@@ -38,7 +38,16 @@ export enum TimestampState {
  })
 export class TimesService {
 
-  constructor() { }
+  constructor() {
+    // if the browser supports local storage
+    if (typeof(Storage) !== "undefined") {
+      // check local storage to see if there was a previous view state and use that if it exists
+      if (localStorage.lastTimeStampHistoryState) {
+        // parse json string back into a HistoryState and use its values as current state
+        this.parseAndInitFromState(localStorage.lastTimeStampHistoryState);
+      }
+    }
+  }
 
   /** a list of {@link SavedTime time splits}*/
   private _times: SavedTime[] = [];
@@ -173,6 +182,11 @@ export class TimesService {
     }
     // push the current state to the history
     this.undoHistory.push(state);
+    // if the browser supports local storage
+    if (typeof(Storage) !== "undefined") {
+      // save the stringified history state to local storage so the next time the page loads we wont lose our splits
+      localStorage.setItem("lastTimeStampHistoryState", state as any);
+    }
     // update the current index of the history list
     this.undoHistoryIndex = this.undoHistory.length - 1;
     // try to finsih checking for changes
@@ -204,12 +218,8 @@ export class TimesService {
       this.undoHistoryIndex--;
       // get json string from history
       let newState = this.undoHistory[this.undoHistoryIndex];
-      // parse json string back into a SavedTime array
-      let newStateObj:HistoryState = JSON.parse(newState, this.reviseFn);
-      // replace the times list with the one taken out of the history list
-      this._times = newStateObj.times;
-      // replace the running state with the new running state
-      this.state = newStateObj.runningState;
+      // parse json string back into a HistoryState and use its values as current state
+      this.parseAndInitFromState(newState);
     }
   }
 
@@ -219,12 +229,18 @@ export class TimesService {
       this.undoHistoryIndex++;
       // get json string from history
       let newState = this.undoHistory[this.undoHistoryIndex];
-      // parse json string back into a SavedTime array
-      let newStateObj = JSON.parse(newState, this.reviseFn);
-      // replace the times list with the one taken out of the history list
-      this._times = newStateObj.times;
-      // replace the running state with the new running state
-      this.state = newStateObj.runningState;
+      // parse json string back into a HistoryState and use its values as current state
+      this.parseAndInitFromState(newState);
     }
+  }
+
+  /** parse the stringifies {@link HistoryState} and use its contents to replace the current {@link times} and {@link state} */
+  parseAndInitFromState(newState: string) {
+    // parse json string back into a HistoryState
+    let newStateObj: HistoryState = JSON.parse(newState, this.reviseFn);
+    // replace the times list with the one taken out of the history list
+    this._times = newStateObj.times;
+    // replace the running state with the new running state
+    this.state = newStateObj.runningState;
   }
 }
