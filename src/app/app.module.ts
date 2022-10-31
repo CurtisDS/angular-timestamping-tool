@@ -8,17 +8,17 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MaterialExampleModule } from '../material.module';
+import { MaterialModule } from '../material.module';
 import { ControlsComponent } from './components/controls/controls.component';
 
 @NgModule({
-  imports:      [ 
+  imports: [ 
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,
     MatNativeDateModule,
-    MaterialExampleModule,
+    MaterialModule,
     ReactiveFormsModule ],
   declarations: [ AppComponent, TimestampComponent, SpinnerComponent, ControlsComponent ],
   bootstrap:    [ AppComponent ]
