@@ -13,6 +13,7 @@ import { ControlsComponent } from './components/controls/controls.component';
 import { ConvertCaseDirective } from './directives/convert-case.directive';
 
 import { YouTubePlayerModule } from '@angular/youtube-player';
+import { DraggableDirective } from './directives/dargable-div.directive';
 
 @NgModule({
   imports: [ 
@@ -24,7 +25,7 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
     MaterialModule,
     ReactiveFormsModule,
     YouTubePlayerModule ],
-  declarations: [ AppComponent, TimestampComponent, SpinnerComponent, ControlsComponent, ConvertCaseDirective ],
+  declarations: [ AppComponent, TimestampComponent, SpinnerComponent, ControlsComponent, ConvertCaseDirective, DraggableDirective ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
