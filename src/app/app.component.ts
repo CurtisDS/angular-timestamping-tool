@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.youtubeApiLoaded = true;
     }
     this.youtubeServiceSubscription = this.youtube.seekToObservable.subscribe(time => {
-      this.player.seekTo(7, true);
+      this.player.seekTo(time, true);
       this.player.playVideo();
     });
   }
@@ -89,16 +89,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   /** covert a time split into a simple string */
   getTimeStampText(index: number, sortState = this.sortState): string {
-    // if the sort is RevChron the index number is going to be upsidedown and needs to be normalized to a standard index number
-    // for example if RevChron Index 0 is actually poing to the last index of the array and needs to be adjusted
+    // if the sort is RevChron the index number is going to be upside down and needs to be normalized to a standard index number
+    // for example if RevChron Index 0 is actually pointng to the last index of the array and needs to be adjusted
     // if it is sorted Chron take index as is
     index = sortState === SortState.RevChron ? this.timeservice.times.length - (1 * index + 1) : index;
     // get the time split from the times list
     let time = this.timeservice.times[index];
     // create a label if there isnt one set already based on the index value
     let label = time.label || `Split ${index+1}`;
-    // create a string to represent the offset value. If above 60s convert and round to minutes. If above 60m conveert and round to hours
-    let adjusted =
+    // create a string to represent the offset value. If above 60s convert and round to minutes. If above 60m convert and round to hours
+    let adjusted = true ? "" : /* IGNORE THIS. Originally intended to show which timestamps were suspected to be inacurate but not used anymore*/
       typeof time.offsetSeconds === 'undefined' || time.offsetSeconds === null ||  time.offsetSeconds as any == ""
         ? ''
         : Math.abs(time.offsetSeconds) > 3600

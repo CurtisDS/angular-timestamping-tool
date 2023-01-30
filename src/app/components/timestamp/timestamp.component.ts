@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { SavedTime, TimesService } from '../../services/times.service';
-import moment from 'moment';
 import { YoutubeService } from '../../services/youtube.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-timestamp',
@@ -10,6 +10,12 @@ import { YoutubeService } from '../../services/youtube.service';
 })
 export class TimestampComponent implements OnInit {
   constructor(private timeservice: TimesService, private youtube: YoutubeService) {}
+
+  get showYoutube(): boolean {
+    return typeof this.youtube.URL != "undefined" && this.youtube.URL.trim() != "";
+  }
+
+  @ViewChild("spinner", { read: ElementRef }) spinner: ElementRef;
 
   /** the index of this timestamp */
   @Input() timestampIndex: number;
@@ -23,7 +29,12 @@ export class TimestampComponent implements OnInit {
   }
 
   playAtTimestamp() {
-    this.youtube.seekTo(7);
+    this.youtube.seekTo(this.timestampSeconds);
+    this.spinner.nativeElement.querySelector('input').focus();
+  }
+
+  get timestampSeconds(): number {
+    return this.timeservice.getDiffSeconds(this.savedTime);
   }
 
   /** return the min value for the offset input control */

@@ -1,17 +1,15 @@
-<div class="row">
+<div class="row" [attr.youtube]="showYoutube">
   <div class="flex-container time">
     <!--timestamp-->
-    <code [title]="dateString">{{ diffString }}</code>
+    <code [title]="dateString">{{ diffString }}<mat-icon *ngIf="showYoutube" class="playAt" [attr.title]="timestampSeconds" (click)="playAtTimestamp()">skip_next</mat-icon></code>
     <!--offset input-->
     <app-spinner
+      #spinner
       placeholder="Sec"
       [(ngModel)]="savedTime.offsetSeconds"
       [min]="getMin()"
       [max]="getMax()"
       title="adjust time (seconds)"></app-spinner>
-  </div>
-  <div class="flex-container seek-to">
-    <button (click)="playAtTimestamp()">play</button>
   </div>
   <!--description input-->
   <div class="flex-container description">

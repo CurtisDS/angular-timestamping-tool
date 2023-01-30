@@ -85,13 +85,18 @@ export class TimesService {
    * @returns {Moment} the difference represented as a Moment
    */
   getDiff(time: SavedTime|Moment): Moment {
-    let compare: Moment;
-    if(time instanceof SavedTime) {
-      compare = time.getAdjustedTime();
-    } else {
-      compare = time;
-    }
+    let compare = time instanceof SavedTime ? time.getAdjustedTime() : time;
     return moment.utc(compare.diff(this.startTime.getAdjustedTime()));
+  }
+
+  /**
+   * compare a given time to the start time to get a difference in seconds.
+   * Given either a {@link SavedTime} or a {@link Moment} to compare to the {@link startTime start time}
+   * @returns {number} the difference in seconds
+   */
+  getDiffSeconds(time: SavedTime|Moment): number {
+    let compare = time instanceof SavedTime ? time.getAdjustedTime() : time;
+    return compare.diff(this.startTime.getAdjustedTime(), 'seconds');
   }
 
   /** remove all time splits from the {@link times} list */
