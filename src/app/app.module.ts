@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MaterialModule } from '../material.module';
 import { ControlsComponent } from './components/controls/controls.component';
+import { ConvertCaseDirective } from './directives/convert-case.directive';
 
 @NgModule({
   imports: [ 
@@ -20,7 +21,7 @@ import { ControlsComponent } from './components/controls/controls.component';
     MatNativeDateModule,
     MaterialModule,
     ReactiveFormsModule ],
-  declarations: [ AppComponent, TimestampComponent, SpinnerComponent, ControlsComponent ],
+  declarations: [ AppComponent, TimestampComponent, SpinnerComponent, ControlsComponent, ConvertCaseDirective ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
