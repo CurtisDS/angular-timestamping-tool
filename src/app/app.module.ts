@@ -12,6 +12,8 @@ import { MaterialModule } from '../material.module';
 import { ControlsComponent } from './components/controls/controls.component';
 import { ConvertCaseDirective } from './directives/convert-case.directive';
 
+import { YouTubePlayerModule } from '@angular/youtube-player';
+
 @NgModule({
   imports: [ 
     BrowserAnimationsModule,
@@ -20,7 +22,8 @@ import { ConvertCaseDirective } from './directives/convert-case.directive';
     HttpClientModule,
     MatNativeDateModule,
     MaterialModule,
-    ReactiveFormsModule ],
+    ReactiveFormsModule,
+    YouTubePlayerModule ],
   declarations: [ AppComponent, TimestampComponent, SpinnerComponent, ControlsComponent, ConvertCaseDirective ],
   bootstrap:    [ AppComponent ]
 })

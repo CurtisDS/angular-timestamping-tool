@@ -1,22 +1,32 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { TimesService } from './services/times.service';
 import { ViewState, SortState, ViewStateService } from './services/view-state.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { YoutubeService } from './services/youtube.service';
+import { YouTubePlayer } from '@angular/youtube-player';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   constructor(
     public timeservice: TimesService,
     public viewstateservice: ViewStateService,
-    private clipboard: Clipboard
+    private clipboard: Clipboard,
+    private youtube: YoutubeService
   ) {}
+
+  @ViewChild("player") player: YouTubePlayer;
+
+  private youtubeServiceSubscription: Subscription;
 
   /** the heading of the app */
   name = 'Timestamps';
+
+  youtubeApiLoaded = false;
 
   /** the {@link ViewStates ViewState} */
   get viewState(): ViewState {
@@ -36,6 +46,45 @@ export class AppComponent {
   /** {@link SortState SortState} enum */
   get SortStates(): typeof SortState {
     return SortState;
+  }
+
+  /** get the youtube url from the youtube service */
+  get youtubeURL(): string {
+    return this.youtube.URL;
+  }
+
+  /** get the youtube panel view setting */
+  get showYTPanel(): boolean {
+    return this.youtube.showYTPanel;
+  }
+
+  get videoID() {
+    if(this.youtube.URL) {
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = this.youtube.URL.match(regExp);
+      const id = (match&&match[7].length==11)? match[7] : this.youtube.URL;
+      return id;
+    }
+    return null;
+  }
+
+  ngOnInit() {
+    if (!this.youtubeApiLoaded) {
+      // This code loads the IFrame Player API code asynchronously, according to the instructions at
+      // https://developers.google.com/youtube/iframe_api_reference#Getting_Started
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.body.appendChild(tag);
+      this.youtubeApiLoaded = true;
+    }
+    this.youtubeServiceSubscription = this.youtube.seekToObservable.subscribe(time => {
+      this.player.seekTo(7, true);
+      this.player.playVideo();
+    });
+  }
+
+  ngOnDestroy() {
+    this.youtubeServiceSubscription.unsubscribe();
   }
 
   /** covert a time split into a simple string */

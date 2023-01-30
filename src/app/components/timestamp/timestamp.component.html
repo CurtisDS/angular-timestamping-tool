@@ -5,10 +5,13 @@
     <!--offset input-->
     <app-spinner
       placeholder="Sec"
-      [(ngModel)]="this.savedTime.offsetSeconds"
+      [(ngModel)]="savedTime.offsetSeconds"
       [min]="getMin()"
       [max]="getMax()"
       title="adjust time (seconds)"></app-spinner>
+  </div>
+  <div class="flex-container seek-to">
+    <button (click)="playAtTimestamp()">play</button>
   </div>
   <!--description input-->
   <div class="flex-container description">
@@ -19,7 +22,7 @@
         convertCase
         placeholder="Description"
         class="textAreaInput"
-        [(ngModel)]="this.savedTime.label"
+        [(ngModel)]="savedTime.label"
       ></textarea>
     </mat-form-field>
   </div>

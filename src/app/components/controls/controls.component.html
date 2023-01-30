@@ -27,11 +27,11 @@
     <!--flex spacer-->
     <span class="spacer"></span>
     <!-- youtube button -->
-    <button mat-icon-button color="none" title="view youtube input" (click)="showInfo = false; showYt = !showYt">
+    <button mat-icon-button color="none" title="view youtube input" (click)="showInfo = false; showYTPanel = !showYTPanel">
       <mat-icon>smart_display</mat-icon>
     </button>
     <!-- info button -->
-    <button mat-icon-button color="none" title="view shortcuts" (click)="showYt = false; showInfo = !showInfo">
+    <button mat-icon-button color="none" title="view shortcuts" (click)="showYTPanel = false; showInfo = !showInfo">
       <mat-icon>keyboard_hide</mat-icon>
     </button>
     <!--sort buttons-->
@@ -67,10 +67,10 @@
       <li><kbd>/</kbd><span>Convert selected text to UPPER CASE</span></li>
     </ul>
   </mat-toolbar-row>
-  <mat-toolbar-row class="row hidden-row" *ngIf="showYt">
+  <mat-toolbar-row class="row hidden-row" *ngIf="showYTPanel">
     <mat-form-field class="full-width-input" appearance="fill">
       <mat-label>Youtube URL</mat-label>
-      <input matInput placeholder="https://youtube.com/v/">
+      <input matInput placeholder="https://youtube.com/v/" [(ngModel)]="youtubeURL" [ngModelOptions]="{ updateOn: 'blur' }">
     </mat-form-field>
   </mat-toolbar-row>
 </mat-toolbar>

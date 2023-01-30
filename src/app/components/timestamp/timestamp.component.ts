@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SavedTime, TimesService } from '../../services/times.service';
 import moment from 'moment';
+import { YoutubeService } from '../../services/youtube.service';
 
 @Component({
   selector: 'app-timestamp',
@@ -8,7 +9,7 @@ import moment from 'moment';
   styleUrls: ['./timestamp.component.css'],
 })
 export class TimestampComponent implements OnInit {
-  constructor(private timeservice: TimesService) {}
+  constructor(private timeservice: TimesService, private youtube: YoutubeService) {}
 
   /** the index of this timestamp */
   @Input() timestampIndex: number;
@@ -19,6 +20,10 @@ export class TimestampComponent implements OnInit {
   ngOnInit() {
     // get the split data from the timeservice for this timestamp index
     this.savedTime = this.timeservice.times[this.timestampIndex];
+  }
+
+  playAtTimestamp() {
+    this.youtube.seekTo(7);
   }
 
   /** return the min value for the offset input control */

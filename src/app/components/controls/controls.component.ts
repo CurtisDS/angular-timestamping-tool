@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener, Input } from '@angular/core';
 import { SavedTime, TimesService, TimestampState } from '../../services/times.service';
 import { SortState, ViewState, ViewStateService } from '../../services/view-state.service';
+import { YoutubeService } from '../../services/youtube.service';
 import moment from 'moment';
 
 @Component({
@@ -9,7 +10,7 @@ import moment from 'moment';
   styleUrls: ['./controls.component.css'],
 })
 export class ControlsComponent implements OnInit, OnDestroy {
-  constructor(private timeservice: TimesService, private viewstateservice: ViewStateService) {}
+  constructor(private timeservice: TimesService, private viewstateservice: ViewStateService, private youtube: YoutubeService) {}
 
   /** the heading to use in this component */
   @Input() name: string;
@@ -25,8 +26,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
   historyIntervalTrigger = 10;
   /** only trigger a history update in the {@link interval timer} every {@link historyIntervalTrigger X} number of cycles  */
   historyInterval = 0;
+
+  /** track if the shortcut panel is open */
   showInfo = false;
-  showYt = false;
 
   ngOnInit() {
     // initialize the timestring to zeros
@@ -84,6 +86,26 @@ export class ControlsComponent implements OnInit, OnDestroy {
   /** the current size of the times array */
   get timestampsSize(): number {
     return this.timeservice.times?.length || 0;
+  }
+
+  /** get the youtube url from the youtube service */
+  get youtubeURL(): string {
+    return this.youtube.URL;
+  }
+
+  /** set the youtube url in the youtube service */
+  set youtubeURL(val: string) {
+    this.youtube.URL = val;
+  }
+
+  /** get the youtube panel view setting */
+  get showYTPanel(): boolean {
+    return this.youtube.showYTPanel;
+  }
+
+  /** set the youtube panel view setting */
+  set showYTPanel(val: boolean) {
+    this.youtube.showYTPanel = val;
   }
 
   /** event listener for when CTRL+Z is pressed to perform an undo */

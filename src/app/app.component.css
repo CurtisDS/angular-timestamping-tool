@@ -32,3 +32,25 @@ content {
   display: flex;
   flex-direction: column;
 }
+
+#youtubeEmbed {
+  top: 1em;
+  right: 1em;
+  z-index: 1;
+  text-align: center;
+}
+
+:host() ::ng-deep #youtubeEmbed iframe {
+  margin-bottom: 1em;
+  max-width: 100%;
+}
+
+#youtubeEmbed[show-video="false"] {
+  position: sticky;
+}
+
+:host() ::ng-deep #youtubeEmbed[show-video="false"] iframe {
+  position: absolute;
+  max-width: calc(100% - 200px);
+  right: 1em;
+}
