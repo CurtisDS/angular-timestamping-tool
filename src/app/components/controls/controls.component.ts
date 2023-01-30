@@ -25,6 +25,8 @@ export class ControlsComponent implements OnInit, OnDestroy {
   historyIntervalTrigger = 10;
   /** only trigger a history update in the {@link interval timer} every {@link historyIntervalTrigger X} number of cycles  */
   historyInterval = 0;
+  showInfo = false;
+  showYt = false;
 
   ngOnInit() {
     // initialize the timestring to zeros
