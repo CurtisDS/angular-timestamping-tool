@@ -163,16 +163,16 @@ export class AppComponent implements OnInit, OnDestroy {
     attempt();
   }
 
-  /** confirm the browser closing if there is existing time splits */
-  @HostListener('window:beforeunload', ['$event'])
-  beforeLeaveFn = (event: any) => {
-    if(this.timeservice.times.length==0) {
-      return undefined;
-    }
-    let confirmationMessage = 'It looks like you have a Timestamp session. '
-                            + 'If you leave now you will lose your times.';
+  // /** confirm the browser closing if there is existing time splits */
+  // @HostListener('window:beforeunload', ['$event'])
+  // beforeLeaveFn = (event: any) => {
+  //   if(this.timeservice.times.length==0) {
+  //     return undefined;
+  //   }
+  //   let confirmationMessage = 'It looks like you have a Timestamp session. '
+  //                           + 'If you leave now you will lose your times.';
 
-    (event || window.event).returnValue = confirmationMessage; //Gecko + IE
-    return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-  }
+  //   (event || window.event).returnValue = confirmationMessage; //Gecko + IE
+  //   return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+  // }
 }
