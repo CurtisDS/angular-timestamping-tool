@@ -17,11 +17,14 @@
     </ng-container>
     <!--buttons while not running-->
     <ng-template #notRunning>
-      <button mat-mini-fab color="go" title="play" (click)="play()">
+      <button mat-mini-fab color="go" title="{{importing ? 'cancel import and play' : 'play'}}" (click)="play()">
         <mat-icon>play_arrow</mat-icon>
       </button>
       <button mat-mini-fab color="warn" title="reset" (click)="delete()" [disabled]="timestampsSize === 0">
         <mat-icon>delete_sweep</mat-icon>
+      </button>
+      <button mat-mini-fab color="split" title="import existing timestamps" (click)="import()" *ngIf="timestampsSize === 0">
+        <mat-icon>{{importing ? 'playlist_add_check' : 'edit_note'}}</mat-icon>
       </button>
     </ng-template>
     <!--flex spacer-->
@@ -74,3 +77,9 @@
     </mat-form-field>
   </mat-toolbar-row>
 </mat-toolbar>
+<div *ngIf="importing">
+  <textarea [(ngModel)]="importChapters" placeholder="00:00:00 - Start
+00:05:42 - Topic1
+00:47:38 - Topic2
+01:21:03 - Topic3"></textarea>
+</div>

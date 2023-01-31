@@ -38,7 +38,6 @@ code {
   transform: scaleY(-1);
 }
 
-
 .hidden-row {
   height: unset;
   align-items: start;
@@ -82,4 +81,12 @@ kbd {
 
 :host ::ng-deep .hidden-row .mat-input-element::placeholder{
   color: rgba(255, 255, 255, 0.41);
+}
+
+textarea {
+  width: calc(100% - 2em);
+  max-width: 1024px;
+  margin: 1em auto 1em;
+  height: 300px;
+  display: block;
 }

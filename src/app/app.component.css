@@ -34,23 +34,40 @@ content {
 }
 
 #youtubeEmbed {
-  top: 1em;
-  right: 1em;
-  z-index: 1;
   text-align: center;
 }
 
-:host() ::ng-deep #youtubeEmbed iframe {
+.dragable {
   margin-bottom: 1em;
-  max-width: 100%;
+  position: relative;
+  right: 0;
 }
 
-#youtubeEmbed[show-video="false"] {
-  position: sticky;
+#youtubeEmbed[show-video="true"] .dragable {
+  top: unset !important;
+  left: unset !important;
+}
+
+#youtubeEmbed[show-video="false"] .dragable {
+  position: fixed;
+  cursor: move;
+  z-index: 15;
+  user-select: none;
+  box-shadow: 0px 0px 11px -5px black;
+  border: 15px solid #3f51b5;
+  background: #3f51b5;
+  margin-bottom: 0em;
 }
 
 :host() ::ng-deep #youtubeEmbed[show-video="false"] iframe {
-  position: absolute;
-  max-width: calc(100% - 200px);
-  right: 1em;
+  /*! position: absolute; */
+  max-width: 100%;
+  /*! right: 1em; */
+}
+
+.timecode {
+  color: white;
+  background-color: black;
+  margin: -6px auto 0px;
+  width: 530px;
 }

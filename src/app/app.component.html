@@ -3,13 +3,17 @@
 <content>
   <ng-container *ngIf="viewState === ViewStates.Edit">
     <div id="youtubeEmbed" *ngIf="youtubeURL" [attr.show-video]="showYTPanel">
-      <youtube-player #player
-        class="player"
-        [videoId]="videoID" 
-        suggestedQuality="highres" 
-        [height]="300" 
-        [width]="530" 
-        [startSeconds]="0"></youtube-player>
+      <div class="dragable" appDraggable>
+        <youtube-player #player
+          class="player"
+          [videoId]="videoID" 
+          suggestedQuality="highres" 
+          [height]="300" 
+          [width]="530" 
+          [startSeconds]="0"
+          [playerVars]="{ modestbranding: 1, fs: 0, playsinline: 1, rel: 0 }"></youtube-player>
+          <div class="timecode">{{timeCode}}</div>
+      </div>
     </div>
     <!--if we are in Edit mode create a app-timestamp component for each split-->
     <div class="timestamps" [class.reverseSort]="sortState === SortStates.RevChron">

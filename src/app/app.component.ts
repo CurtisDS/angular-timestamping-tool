@@ -5,6 +5,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { YoutubeService } from './services/youtube.service';
 import { YouTubePlayer } from '@angular/youtube-player';
 import { Subscription } from 'rxjs';
+import moment from 'moment';
 
 @Component({
   selector: 'my-app',
@@ -58,7 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.youtube.showYTPanel;
   }
 
-  get videoID() {
+  get videoID(): string|null {
     if(this.youtube.URL) {
       const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
       const match = this.youtube.URL.match(regExp);
@@ -66,6 +67,30 @@ export class AppComponent implements OnInit, OnDestroy {
       return id;
     }
     return null;
+  }
+
+  get timeCode(): string {
+    if(typeof this.player === "undefined" || this.player === null) return "";
+    return this.convertSecondsToYTTimestring(this.player.getCurrentTime()) + "/" + this.convertSecondsToYTTimestring(this.player.getDuration());
+  }
+
+  convertSecondsToYTTimestring(seconds: number): string {
+    const sec = Math.trunc(seconds);
+    const min = Math.floor(sec / 60);
+    const hour = Math.floor(min / 60);
+    const day = Math.floor(hour / 24);
+  
+    const rSec = sec % 60;
+    const rMin = min % 60;
+    const rHour = hour % 24;
+  
+    let result = '';
+    if (day > 0) result += `${day}:`;
+    if (day > 0 || rHour > 0) result += `${rHour < 10 && day > 0 ? '0' + rHour : rHour}:`;
+    result += `${rMin < 10 && (day > 0 || rHour > 0) ? '0' + rMin : rMin}:`;
+    result += `${rSec < 10 ? '0' + rSec : rSec}`;
+  
+    return result;
   }
 
   ngOnInit() {

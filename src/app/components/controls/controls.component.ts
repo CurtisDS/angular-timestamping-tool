@@ -30,6 +30,10 @@ export class ControlsComponent implements OnInit, OnDestroy {
   /** track if the shortcut panel is open */
   showInfo = false;
 
+  /** current ui state is importing old timestamps */
+  importing = false;
+  importChapters = ""
+
   ngOnInit() {
     // initialize the timestring to zeros
     this.timeString = '00:00:00';
@@ -160,6 +164,10 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   /** set the state to running and create a new split to indicate the change in state */
   play() {
+    // remove any unimported chapters and turn off importing mode
+    this.importChapters = "";
+    this.importing = false;
+    // set new state
     this.timeservice.state = TimestampState.Running;
     if (this.timeservice.times?.length === 0) {
       this.timeservice.addTime(new SavedTime(moment(), 'Start'));
@@ -185,6 +193,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
       // ask for a confirmation before deleting
       var result = confirm("Are you sure you want to delete all timestamps?");
       if (result) {
+        this.showInfo = false;
+        this.youtube.showYTPanel = false;
+        this.youtubeURL = "";
         // delete the times
         this.timeservice.deleteTimes();
       }
@@ -209,5 +220,46 @@ export class ControlsComponent implements OnInit, OnDestroy {
   /** set the current {@link SortState} to {@link SortState.RevChron} */
   sortRevChron() {
     this.viewstateservice.updateSortState(SortState.RevChron);
+  }
+
+  /** Function to convert a timecode in the format "HH:mm:ss" to a number of seconds */
+  timecodeToSeconds(timecode: string) {
+    // Split the timecode into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timecode.split(':').map(Number);
+    // Convert the hours, minutes, and seconds to a timestamp in seconds
+    return (hours * 3600) + (minutes * 60) + seconds;
+  }
+
+  /** flip between import state and not, if it was import state, then parse the contents of the textarea for timestamps */
+  import() {
+    if(!this.importing) {
+      this.importChapters = "";
+      this.importing = true;
+    } else {
+      this.importing = false;
+      if(this.importChapters.trim() != "") {
+        // split based on new lines
+        const list = this.importChapters.trim().replace("\r", "").split("\n").map((line) => {
+          let result = line.split(" - ");
+          // convert to an object { time, label } and turn HH:mm:ss to seconds
+          return { time: this.timecodeToSeconds(result[0].trim()), label: result.slice(1).join(" - ").trim() };
+        });
+
+        // sort chronologically
+        list.sort((a, b) => {
+          return a.time - b.time;
+        });
+
+        // get the last timestamp seconds
+        const maxTime = list[list.length - 1].time;
+        const now = moment();
+        list.forEach(item => {
+          // Assuming the last timestamp happened "now" get the difference in seconds to each timestamp to get when the timestamp would have been generated
+          const secondsOffset = maxTime - item.time;
+          const momentTime = now.clone().subtract(secondsOffset, "seconds");
+          this.timeservice.addTime(new SavedTime(momentTime, item.label));
+        });
+      }
+    }
   }
 }
