@@ -31,7 +31,14 @@
     <!--if we are in Code mode-->
     <mat-form-field appearance="fill" class="textareaCode">
       <mat-label>Document</mat-label>
-      <textarea matInput convertCase class="textareaInput" [(ngModel)]="viewstateservice.docString" (ngModelChange)="save(3000)" (blur)="save(0)" #docInput></textarea>
+      <textarea matInput convertCase class="textareaInput" [(ngModel)]="viewstateservice.docString" (ngModelChange)="save(3000)" (blur)="save(0)" #docInput placeholder="Heading
+- Topic 1
+  + Subtopic 1.1
+- Topic 2
+- Topic 3
+  + Subtopic 3.1
+    + Subtopic 3.1.2
+"></textarea>
     </mat-form-field>
   </ng-template>
 </div>

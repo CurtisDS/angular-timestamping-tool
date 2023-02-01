@@ -29,6 +29,7 @@ header button {
   display: flex;
   align-items: center;
   justify-content: center;
+  order: 0;
 }
 
 header button:hover {
@@ -53,6 +54,28 @@ header button .mat-icon {
   position: relative;
 }
 
-.content > * {
+.content > .content-item {
   flex: 1;
+}
+
+.flip {
+  flex-direction: row-reverse;
+}
+
+.swap:first-of-type,
+.swap:last-of-type {
+  order: 1;
+}
+
+.flip .swap:first-of-type,
+.flip .swap:last-of-type {
+  order: -1;
+}
+
+@media (max-width: 780px) {
+  :host header button:not(.swap),
+  .content:not(.flip) .content-item:not(:first-child),
+  .content.flip .content-item:not(:last-child) {
+    display: none;
+  }
 }

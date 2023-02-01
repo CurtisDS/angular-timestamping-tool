@@ -1,11 +1,11 @@
 <div class="container">
-  <header class="mat-primary-custom" [style.flex-direction]="flip?'row-reverse':'row'">
+  <header class="mat-primary-custom" [class.flip]="flip">
     <button  (click)="showDocs = !showDocs" *ngIf="showTimes">{{showDocs?'Hide':'Show'}} Docs <mat-icon class="material-symbols-outlined thin">feed</mat-icon></button>
-    <button  (click)="flip = !flip" title="Swap" *ngIf="showTimes && showDocs"><mat-icon>swap_horiz</mat-icon></button>
+    <button  (click)="doFlip()" title="Swap" class="swap"><mat-icon>swap_horiz</mat-icon></button>
     <button  (click)="showTimes = !showTimes" *ngIf="showDocs">{{showTimes?'Hide':'Show'}} Timestamps <mat-icon  class="material-symbols-outlined thin">overview</mat-icon></button>
   </header>
-  <div class="content" [style.flex-direction]="flip?'row-reverse':'row'">
-    <app-docs *ngIf="showDocs"></app-docs>
-    <app-timestamps *ngIf="showTimes"></app-timestamps>
+  <div class="content" [class.flip]="flip">
+    <app-docs class="content-item" *ngIf="showDocs"></app-docs>
+    <app-timestamps class="content-item" *ngIf="showTimes"></app-timestamps>
   </div>
 </div>

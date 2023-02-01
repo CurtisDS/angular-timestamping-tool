@@ -15,4 +15,13 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     
   }
+
+  doFlip() {
+    if (this.showDocs && this.showTimes) {
+      this.flip = !this.flip;
+    } else {
+      this.showDocs = !this.showDocs;
+      this.showTimes = !this.showTimes;
+    }
+  }
 }
