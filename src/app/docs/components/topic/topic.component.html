@@ -1,0 +1,21 @@
+<ng-container *ngIf="!lineObj.isTopic; else topic">
+{{ lineObj.title }}
+</ng-container>
+<ng-template #topic>
+<mat-form-field appearance="standard" class="textareaTitle">
+  <mat-label>Topic</mat-label>
+  <textarea
+    matInput
+    convertCase
+    cdkTextareaAutosize
+    #autosize="cdkTextareaAutosize"
+    cdkAutosizeMinRows="1"
+    cdkAutosizeMaxRows="5"
+    [(ngModel)]="lineObj.title"
+    (blur)="save()"></textarea>
+</mat-form-field>
+<button matSuffix mat-mini-fab [color]="btnColor" class="copyIcon mat-elevation-z2" (click)="copyClick()" title="copy">
+  <!--include a copy button to add the text time splits to clipboard-->
+  <mat-icon>file_copy</mat-icon>
+</button>
+</ng-template>

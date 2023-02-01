@@ -1,0 +1,10 @@
+/package-lock.json
+/node_modules
+/dist
+/.angular
+/public
+/.firebaserc
+/firebase.json
+/.firebase
+/.vscode
+tsconfig.app.json

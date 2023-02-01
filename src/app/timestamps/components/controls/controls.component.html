@@ -1,0 +1,88 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row class="row">
+    <!--heading text-->
+    <h1>{{name}}</h1>
+  </mat-toolbar-row>
+  <mat-toolbar-row class="main-row row">
+    <!--timestamp string-->
+    <code [title]="dateString">{{ timeString }}</code>
+    <!--buttons while running-->
+    <ng-container *ngIf="isRunning; else notRunning">
+      <button mat-mini-fab color="alt-warn" title="pause" (click)="stop()">
+        <mat-icon>pause</mat-icon>
+      </button>
+      <button mat-mini-fab color="split" title="split" (click)="split()">
+        <mat-icon>flag</mat-icon>
+      </button>
+    </ng-container>
+    <!--buttons while not running-->
+    <ng-template #notRunning>
+      <button mat-mini-fab color="go" title="{{importing ? 'cancel import and play' : 'play'}}" (click)="play()">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" title="reset" (click)="delete()" [disabled]="timestampsSize === 0">
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+      <button mat-mini-fab color="split" title="import existing timestamps" (click)="import()" *ngIf="timestampsSize === 0">
+        <mat-icon>{{importing ? 'playlist_add_check' : 'edit_note'}}</mat-icon>
+      </button>
+    </ng-template>
+    <!--flex spacer-->
+    <span class="spacer"></span>
+    <!-- youtube button -->
+    <button mat-icon-button color="none" title="view youtube input" (click)="showInfo = false; showYTPanel = !showYTPanel">
+      <mat-icon>smart_display</mat-icon>
+    </button>
+    <!-- info button -->
+    <button mat-icon-button color="none" title="view shortcuts" (click)="showYTPanel = false; showInfo = !showInfo">
+      <mat-icon>keyboard_hide</mat-icon>
+    </button>
+    <!--sort buttons-->
+    <button mat-icon-button title="sort chronologically" class="sort" (click)="sortChron()" *ngIf="!isChronological">
+      <mat-icon class="flip">sort</mat-icon>
+      <!--chronologically-->
+    </button>
+    <button mat-icon-button title="sort reverse chronologically" class="sort" (click)="sortRevChron()" *ngIf="isChronological">
+      <mat-icon>sort</mat-icon>
+      <!--reverse chronologically-->
+    </button>
+    <!--view state buttons-->
+    <button mat-mini-fab color="accent" class="codebtn" title="view code" (click)="codeView()" *ngIf="!isCodeViewState">
+      <mat-icon>code</mat-icon>
+      <!--code state-->
+    </button>
+    <button mat-mini-fab color="accent" class="codebtn" title="hide code" (click)="editView()" *ngIf="isCodeViewState">
+      <mat-icon>code_off</mat-icon>
+      <!--edit state-->
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row class="row hidden-row" *ngIf="showInfo">
+    <!-- flex spacer -->
+    <span class="spacer"></span>
+    <!-- shortcuts -->
+    <h4>Shortcuts:</h4>
+    <ul class="shortcuts">
+      <li><kbd>+</kbd><span>Split</span></li>
+      <li><kbd>Ctrl</kbd> + <kbd>Z</kbd><span>Undo Split</span></li>
+      <li><kbd>Ctrl</kbd> + <kbd>Y</kbd><span>Redo Split</span></li>
+      <li><kbd>[</kbd><span>Convert selected text to lower case</span></li>
+      <li><kbd>]</kbd><span>Convert selected text to Title Case</span></li>
+      <li><kbd>/</kbd><span>Convert selected text to UPPER CASE</span></li>
+    </ul>
+  </mat-toolbar-row>
+  <mat-toolbar-row class="row hidden-row" *ngIf="showYTPanel">
+    <mat-form-field class="full-width-input" appearance="fill">
+      <mat-label>Youtube URL</mat-label>
+      <input matInput placeholder="https://youtube.com/v/" [(ngModel)]="youtubeURL" [ngModelOptions]="{ updateOn: 'blur' }">
+    </mat-form-field>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="import-container">
+  <mat-form-field appearance="fill" *ngIf="importing" class="textareaCode">
+    <mat-label>Chapter Markers</mat-label>
+    <textarea matInput convertCase class="textareaInput" [(ngModel)]="importChapters" placeholder="00:00:00 - Start
+00:05:42 - Topic1
+00:47:38 - Topic2
+01:21:03 - Topic3"></textarea>
+  </mat-form-field>
+</div>

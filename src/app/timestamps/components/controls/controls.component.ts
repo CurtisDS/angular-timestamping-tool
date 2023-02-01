@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, Input, HostBinding } from '@angular/core';
 import { SavedTime, TimesService, TimestampState } from '../../services/times.service';
 import { SortState, ViewState, ViewStateService } from '../../services/view-state.service';
 import { YoutubeService } from '../../services/youtube.service';
@@ -32,6 +32,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   /** current ui state is importing old timestamps */
   importing = false;
+  @HostBinding('style.flex') get flexStyle(): string {
+    return this.importing ? '1 0 auto' : null;
+  }
   importChapters = ""
 
   ngOnInit() {

@@ -40,6 +40,10 @@ $theme: mat.define-light-theme(
 @include mat.all-component-themes($theme);
 
 // Create classes for custom colors to be used with buttons
+.mat-primary-custom {
+  background-color: mat.get-color-from-palette($theme-primary);
+  color: mat.get-color-from-palette($theme-primary, '-contrast');
+}
 .mat-go {
   background-color: mat.get-color-from-palette($theme-go, 'A400');
   color: mat.get-color-from-palette($theme-go, 'A400-contrast');

@@ -1,0 +1,74 @@
+
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-content: stretch;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+.content {
+  max-width: 1024px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1em;
+  height: 100%;
+  max-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.topicList {
+  padding-bottom: 1em;
+}
+
+.textareaInput {
+  resize: none;
+}
+
+.stickyBtnDiv {
+  position: sticky;
+  top: 2em;
+  bottom: calc(1em + 60px);
+  pointer-events: none;
+  z-index: 9;
+}
+
+.stickyBtnDiv > div {
+  position: absolute;
+  width: 100%;
+  text-align: right;
+  padding: 0.5em;
+  pointer-events: all;
+}
+
+.activeIndex {
+  z-index: 10;
+  position: relative;
+}
+
+.jumpToActiveBtn {
+  opacity: 100%;
+  transition: opacity 0.1s;
+}
+
+.hideButton {
+  opacity: 0%;
+}
+
+.textareaCode {
+  margin-top: 1em;
+}
+
+.textareaCode.mat-form-field,
+.textareaCode.mat-form-field ::ng-deep .mat-form-field-wrapper,
+.textareaCode.mat-form-field ::ng-deep .mat-form-field-flex,
+.textareaCode.mat-form-field ::ng-deep .mat-form-field-infix,
+.textareaCode.mat-form-field ::ng-deep textarea.mat-input-element {
+  height: 100%;
+  box-sizing: border-box;
+}

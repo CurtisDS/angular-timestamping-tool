@@ -1,0 +1,37 @@
+<!--include a control strip-->
+<app-controls class="controls" [name]="name"></app-controls>
+<div class="content">
+  <div class="topicList" *ngIf="viewState === ViewStates.Edit && viewstateservice.docArray?.length > 0; else codeView">
+    <!--if we are in Edit mode-->
+    <ng-container *ngFor="let line of viewstateservice.docArray; let i = index">
+      <!--create a div that is sticky-->
+      <div *ngIf="viewstateservice.activeIndex === i && line.isTopic" class="stickyBtnDiv">
+        <!--create an inner div that will position the context absolutely-->
+        <div>
+          <!--create the jump to active topic button-->
+          <button
+            matSuffix
+            mat-mini-fab
+            color="primary"
+            (click)="jumpToActiveTopic()"
+            title="Jump To Active Topic"
+            class="jumpToActiveBtn"
+            #jumpToActiveBtn>
+            <mat-icon>menu_open</mat-icon>
+          </button>
+        </div>
+      </div>
+      <!--create the active topic with a handle to access from within the class-->
+      <app-topic *ngIf="viewstateservice.activeIndex === i && line.isTopic" [lineIndex]="i" #activeTopic></app-topic>
+      <!--create all other topics and non topics (AKA headings)-->
+      <app-topic *ngIf="viewstateservice.activeIndex !== i || !line.isTopic"  [lineIndex]="i"></app-topic>
+    </ng-container>
+  </div>
+  <ng-template #codeView>
+    <!--if we are in Code mode-->
+    <mat-form-field appearance="fill" class="textareaCode">
+      <mat-label>Document</mat-label>
+      <textarea matInput convertCase class="textareaInput" [(ngModel)]="viewstateservice.docString" (ngModelChange)="save(3000)" (blur)="save(0)" #docInput></textarea>
+    </mat-form-field>
+  </ng-template>
+</div>

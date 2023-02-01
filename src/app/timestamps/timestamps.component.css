@@ -1,0 +1,88 @@
+:host {
+	display: flex;
+  position: relative;
+  overflow: hidden;
+  flex: 1 0 auto;
+  flex-direction: column;
+}
+
+.noTimestamps {
+	margin: auto;
+	text-align: center;
+	opacity: 0.5;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.timestamps {
+  display: flex;
+  flex-direction: column;
+  margin: 0 1em;
+}
+
+.timestamps.reverseSort {
+  flex-direction: column-reverse;
+}
+
+.copy {
+  position: absolute;
+  z-index: 100;
+  align-self: end;
+  margin-right: 1em;
+}
+
+.content {
+  max-width: 1024px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 1em;
+  margin: 0 auto;
+}
+
+.controls {
+  flex: 0 0 auto;
+}
+
+#youtubeEmbed {
+  text-align: center;
+}
+
+.dragable {
+  margin-bottom: 1em;
+  position: relative;
+  right: 0;
+  top: 170px;
+}
+
+#youtubeEmbed[show-video="true"] .dragable {
+  top: unset !important;
+  left: unset !important;
+  background: transparent;
+  overflow: hidden;
+}
+
+#youtubeEmbed[show-video="false"] .dragable {
+  position: fixed;
+  cursor: move;
+  z-index: 15;
+  user-select: none;
+  box-shadow: 0px 0px 11px -5px black;
+  padding: 15px;
+  margin-bottom: 0em;
+}
+
+:host ::ng-deep #youtubeEmbed[show-video="false"] iframe {
+  /*! position: absolute; */
+  max-width: 100%;
+  /*! right: 1em; */
+}
+
+.timecode {
+  color: white;
+  background-color: black;
+  margin: -6px auto 0px;
+  max-width: 530px;
+}

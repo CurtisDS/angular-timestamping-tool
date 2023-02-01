@@ -1,73 +1,58 @@
-.noTimestamps {
-  margin: auto;
-  text-align: center;
-  opacity: 0.5;
-  margin-top: 1em;
-}
-
-.controls {
-  margin-bottom: 1em;
-}
-
-.timestamps {
-  display: flex;
-  flex-direction: column;
-  margin: 0 1em;
-}
-
-.timestamps.reverseSort {
-  flex-direction: column-reverse;
-}
-
-.copy {
-  position: absolute;
-  z-index: 100;
-  align-self: end;
-  margin-right: 1em;
-}
-
-content {
-  max-width: 1024px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-#youtubeEmbed {
-  text-align: center;
-}
-
-.dragable {
-  margin-bottom: 1em;
+.container {
+  height: 100vh;
+  box-sizing: border-box;
   position: relative;
-  right: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-#youtubeEmbed[show-video="true"] .dragable {
-  top: unset !important;
-  left: unset !important;
+header {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  overflow: hidden;
 }
 
-#youtubeEmbed[show-video="false"] .dragable {
-  position: fixed;
-  cursor: move;
-  z-index: 15;
-  user-select: none;
-  box-shadow: 0px 0px 11px -5px black;
-  border: 15px solid #3f51b5;
-  background: #3f51b5;
-  margin-bottom: 0em;
-}
-
-:host() ::ng-deep #youtubeEmbed[show-video="false"] iframe {
-  /*! position: absolute; */
-  max-width: 100%;
-  /*! right: 1em; */
-}
-
-.timecode {
+header button {
+  flex: 1;
+  background-color: transparent;
   color: white;
-  background-color: black;
-  margin: -6px auto 0px;
-  width: 530px;
+  border: 0px solid #ffffff59;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px 1px #12193c, 0px 0px 4px -2px #fff inset;
+  padding: 4px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header button:hover {
+  background-color: #c8c8c81a;
+}
+
+header button:active {
+  box-shadow: 1px 1px 1px -1px #12193c, 0px 0px 4px -2px #fff inset;
+}
+
+header button .mat-icon {
+  font-size: 20px;
+  height: 20px;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.content > * {
+  flex: 1;
 }
