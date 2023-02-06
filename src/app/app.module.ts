@@ -8,6 +8,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MaterialModule } from '../material.module';
 import { TimestampsModule } from './timestamps/timestamps.module';
 import { DocsModule } from './docs/docs.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from 'src/environments/environments';
 
 /** a debug flag for various operations */
 export const DEBUG = false;
@@ -22,7 +24,13 @@ export const DEBUG = false;
     MaterialModule,
     ReactiveFormsModule,
     TimestampsModule,
-    DocsModule ],
+    DocsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }) ],
   declarations: [ AppComponent ],
   bootstrap:    [ AppComponent ]
 })
