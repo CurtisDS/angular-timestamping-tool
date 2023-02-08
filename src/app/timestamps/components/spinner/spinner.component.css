@@ -2,11 +2,15 @@
   display: contents;
 }
 
+:host ::ng-deep .mat-form-field-infix {
+  display: flex;
+}
+
 .input-spinner-controls {
   display: inline;
   position: relative;
   margin-left: -20px;
-  margin-right: 20px;
+  white-space: nowrap;
 }
 
 .input-spinner-up,
@@ -21,10 +25,18 @@
   overflow: hidden;
   position: absolute;
   top: -1px;
+  cursor: pointer;
+  background: #00000008;
+  width: 19px;
+}
+
+.input-spinner-up:hover,
+.input-spinner-down:hover {
+  background: #0002;
 }
 
 .input-spinner-down {
-  transform: scale(-1);
+  transform: scaleY(-1);
   top: 50%;
 }
 
