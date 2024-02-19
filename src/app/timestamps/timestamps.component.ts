@@ -68,7 +68,7 @@ export class TimestampsComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  get timeCode(): string {
+  get ytTimeProgress(): string {
     if(typeof this.player === "undefined" || this.player === null) return "";
     return this.convertSecondsToYTTimestring(this.player.getCurrentTime()) + "/" + this.convertSecondsToYTTimestring(this.player.getDuration());
   }
@@ -111,8 +111,8 @@ export class TimestampsComponent implements OnInit, OnDestroy {
     this.youtubeServiceSubscription.unsubscribe();
   }
 
-  /** covert a time split into a simple string */
-  getTimeStampText(index: number, sortState = this.sortState): string {
+  /** convert a time split into a simple string */
+  getTimeStampText(index: number, sortState = this.sortState, timeStampFormat = 'HH:mm:ss'): string {
     // if the sort is RevChron the index number is going to be upside down and needs to be normalized to a standard index number
     // for example if RevChron Index 0 is actually pointng to the last index of the array and needs to be adjusted
     // if it is sorted Chron take index as is
@@ -122,7 +122,7 @@ export class TimestampsComponent implements OnInit, OnDestroy {
     // create a label if there isnt one set already based on the index value
     let label = time.label || `Split ${index+1}`;
     // create a string to represent the offset value. If above 60s convert and round to minutes. If above 60m convert and round to hours
-    let adjusted = true ? "" : /* IGNORE THIS. Originally intended to show which timestamps were suspected to be inacurate but not used anymore*/
+    let adjusted = true ? "" : /* IGNORE THIS. Originally intended to show which timestamps were suspected to be inaccurate but not used anymore*/
       typeof time.offsetSeconds === 'undefined' || time.offsetSeconds === null ||  time.offsetSeconds as any == ""
         ? ''
         : Math.abs(time.offsetSeconds) > 3600
@@ -130,8 +130,8 @@ export class TimestampsComponent implements OnInit, OnDestroy {
         : Math.abs(time.offsetSeconds) > 60
         ? `*${time.offsetSeconds>0?'+':''}${Math.round(time.offsetSeconds / 60)}m `
         : `*${time.offsetSeconds>0?'+':''}${time.offsetSeconds}s `;
-    // get the adjusted time difference formated as a timestamp
-    let dif = this.timeservice.getDiff(time).format('HH:mm:ss');
+    // get the adjusted time difference formatted as a timestamp
+    let dif = this.timeservice.getDiff(time).format(timeStampFormat);
     // put everything together to make a single line for this split
     return `${dif} - ${adjusted}${label}`;
   }
@@ -140,9 +140,24 @@ export class TimestampsComponent implements OnInit, OnDestroy {
   copyTimestamps() {
     let copyString = '';
 
+    // get the number of seconds for the latest timestamp
+    let totalLength = this.timeservice.getDiffSeconds(this.timeservice.latestTime);
+
+    // the format to use while copying the timestamps
+    let timeStampFormat = 'HH:mm:ss';
+    
+    // limit the timestamp format so there are no unnessesary leading 0s
+    if (totalLength < 600) {
+      timeStampFormat = 'm:ss';
+    } else if (totalLength < 3600) {
+      timeStampFormat = 'mm:ss';
+    } else if (totalLength < 36000) {
+      timeStampFormat = 'H:mm:ss';
+    }
+
     // for each time split convert the time to a timestamp string
     for(let i = 0; i < this.timeservice.times.length; i++) {
-      copyString += this.getTimeStampText(i, SortState.Chron) + '\n';
+      copyString += this.getTimeStampText(i, SortState.Chron, timeStampFormat) + '\n';
     }
 
     // bigin adding text to clipboard

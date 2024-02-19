@@ -72,7 +72,7 @@ export class TimesService {
     return undefined;
   }
 
-  /** the earliest time in the {@link times} list */
+  /** the latest time in the {@link times} list */
   get latestTime(): SavedTime | undefined {
     if(this._times?.length>0)
       return this._times[this._times.length-1];

@@ -64,7 +64,7 @@ export class TopicComponent implements OnInit {
 
   /** copy string to clipboard */
   copyString(copyString: string) {
-    // bigin adding text to clipboard
+    // begin adding text to clipboard
     const pending = this.clipboard.beginCopy(copyString);
     let remainingAttempts = 3;
     // create a method to attempt to add the text to the clipboard. This is needed if the text is large.

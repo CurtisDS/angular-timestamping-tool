@@ -135,7 +135,7 @@ export class ViewStateService {
 
   /** Convert a {@link docString} into a {@link docArray} and save it */
   generateDocArray() {
-    // replace wierd quotes, convert 3 spaces to tabs and split the string for ever new line
+    // replace weird quotes, convert 3 spaces to tabs and split the string for ever new line
     let lines = this.docString.replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/   /g,"\t").split("\n");
     // try to remove blank or otherwise empty lines
     lines = lines.filter(line => {
@@ -143,7 +143,7 @@ export class ViewStateService {
       let isTopic = StartChars.includes(trimmed.charAt(0));
       return trimmed.length > 0 && !isTopic || (isTopic && trimmed.length > 1);
     });
-    // covert the strings to LineObj
+    // convert the strings to LineObj
     this.docArray = lines.map(line => 
       new LineObj(line.trim(), this.getTabCount(line))
     );
