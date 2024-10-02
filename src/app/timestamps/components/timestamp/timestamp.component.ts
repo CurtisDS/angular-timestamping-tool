@@ -29,6 +29,9 @@ export class TimestampComponent implements OnInit {
   }
 
   playAtTimestamp() {
+    if(this.youtube.hidePIP && !this.youtube.showYTPanel) {
+      this.youtube.hidePIP = false;
+    }
     this.youtube.seekTo(this.timestampSeconds);
     this.spinner.nativeElement.querySelector('input').focus();
   }

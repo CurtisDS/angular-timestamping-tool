@@ -29,32 +29,72 @@
     </ng-template>
     <!--flex spacer-->
     <span class="spacer"></span>
-    <!-- youtube button -->
-    <button mat-icon-button color="none" title="view youtube input" (click)="showInfo = false; showYTPanel = !showYTPanel">
-      <mat-icon>smart_display</mat-icon>
+    <div class="collapsible-controls">
+      <!-- youtube button -->
+      <button mat-icon-button color="none" title="view youtube input" (click)="toggleYT()">
+        <mat-icon>smart_display</mat-icon>
+      </button>
+      <!-- info button -->
+      <button mat-icon-button color="none" title="view shortcuts" (click)="toggleShortcuts()">
+        <mat-icon>keyboard_hide</mat-icon>
+      </button>
+      <!--sort buttons-->
+      <button mat-icon-button title="sort chronologically" class="sort" (click)="sortChron()" *ngIf="!isChronological">
+        <mat-icon class="flip">sort</mat-icon>
+        <!--chronologically-->
+      </button>
+      <button mat-icon-button title="sort reverse chronologically" class="sort" (click)="sortRevChron()" *ngIf="isChronological">
+        <mat-icon>sort</mat-icon>
+        <!--reverse chronologically-->
+      </button>
+      <!--view state buttons-->
+      <button mat-mini-fab color="accent" class="codebtn" title="view code" (click)="codeView()" *ngIf="!isCodeViewState">
+        <mat-icon>code</mat-icon>
+        <!--code state-->
+      </button>
+      <button mat-mini-fab color="accent" class="codebtn" title="hide code" (click)="editView()" *ngIf="isCodeViewState">
+        <mat-icon>code_off</mat-icon>
+        <!--edit state-->
+      </button>
+    </div>
+    <button class="collapsible-controls-menu-button" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>more_vert</mat-icon>
     </button>
-    <!-- info button -->
-    <button mat-icon-button color="none" title="view shortcuts" (click)="showYTPanel = false; showInfo = !showInfo">
-      <mat-icon>keyboard_hide</mat-icon>
-    </button>
-    <!--sort buttons-->
-    <button mat-icon-button title="sort chronologically" class="sort" (click)="sortChron()" *ngIf="!isChronological">
-      <mat-icon class="flip">sort</mat-icon>
-      <!--chronologically-->
-    </button>
-    <button mat-icon-button title="sort reverse chronologically" class="sort" (click)="sortRevChron()" *ngIf="isChronological">
-      <mat-icon>sort</mat-icon>
-      <!--reverse chronologically-->
-    </button>
-    <!--view state buttons-->
-    <button mat-mini-fab color="accent" class="codebtn" title="view code" (click)="codeView()" *ngIf="!isCodeViewState">
-      <mat-icon>code</mat-icon>
-      <!--code state-->
-    </button>
-    <button mat-mini-fab color="accent" class="codebtn" title="hide code" (click)="editView()" *ngIf="isCodeViewState">
-      <mat-icon>code_off</mat-icon>
-      <!--edit state-->
-    </button>
+    <mat-menu class="collapsible-controls-menu" #menu="matMenu">
+      <!-- youtube button -->
+      <button mat-menu-item color="none" title="view youtube input" (click)="toggleYT()">
+        <mat-icon>smart_display</mat-icon>
+        <span>Toggle YouTube</span>
+      </button>
+      <!-- info button -->
+      <button mat-menu-item color="none" title="view shortcuts" (click)="toggleShortcuts()">
+        <mat-icon>keyboard_hide</mat-icon>
+        <span>Toggle Shortcuts</span>
+      </button>
+      <!--sort buttons-->
+      <button mat-menu-item title="sort chronologically" class="sort" (click)="sortChron()" *ngIf="!isChronological">
+        <mat-icon class="flip">sort</mat-icon>
+        <span>Sort</span>
+        <!--chronologically-->
+      </button>
+      <button mat-menu-item title="sort reverse chronologically" class="sort" (click)="sortRevChron()" *ngIf="isChronological">
+        <mat-icon>sort</mat-icon>
+        <span>Sort Reverse</span>
+        <!--reverse chronologically-->
+      </button>
+      <!--view state buttons-->
+      <button mat-menu-item color="accent" class="codebtn" title="view code" (click)="codeView()" *ngIf="!isCodeViewState">
+        <mat-icon>code</mat-icon>
+        <span>Code Edit</span>
+        <!--code state-->
+      </button>
+      <button mat-menu-item color="accent" class="codebtn" title="hide code" (click)="editView()" *ngIf="isCodeViewState">
+        <mat-icon>code_off</mat-icon>
+        <span>Visual Edit</span>
+        <!--edit state-->
+      </button>
+    </mat-menu>
+    
   </mat-toolbar-row>
   <mat-toolbar-row class="row hidden-row" *ngIf="showInfo">
     <!-- flex spacer -->

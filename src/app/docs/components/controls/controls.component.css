@@ -36,8 +36,15 @@
   padding-left: 1em;
 }
 
+.shortcuts li {
+  display: flex;
+  align-items: baseline;
+}
+
 .shortcuts span {
   margin-left: 0.5em;
+  white-space: wrap;
+  min-width: 80px;
 }
 
 .shortcuts span::before {

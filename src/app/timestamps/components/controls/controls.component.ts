@@ -115,6 +115,16 @@ export class ControlsComponent implements OnInit, OnDestroy {
     this.youtube.showYTPanel = val;
   }
 
+  /** get the youtube panel PIP setting */
+  get hidePIP(): boolean {
+    return this.youtube.hidePIP;
+  }
+
+  /** set the youtube panel PIP setting */
+  set hidePIP(val: boolean) {
+    this.youtube.hidePIP = val;
+  }
+
   /** event listener for when CTRL+Z is pressed to perform an undo */
   @HostListener('window:keydown.control.z', ['$event'])
   undo(event: KeyboardEvent) {
@@ -163,6 +173,41 @@ export class ControlsComponent implements OnInit, OnDestroy {
         this.split();
       }
     }
+  }
+
+  toggleYT() {
+    this.showInfo = false;
+	  // If the YouTube panel is open
+    if (this.showYTPanel) {
+      // Close the YouTube panel
+      this.showYTPanel = false;
+      
+      // Check if there is a valid URL
+      if (this.youtube.URL && this.youtube.URL.length > 0) {
+        // Show PIP mode (set hidePIP to false to show it)
+        this.hidePIP = false;
+      } else {
+        // No valid URL, so just close the PIP as well
+        this.hidePIP = true;
+      }
+    } 
+    // If the YouTube panel is closed
+    else {
+      // Check if PIP is currently active
+      if (!this.hidePIP) {
+        // If PIP is active, close it
+        this.hidePIP = true;
+      } else {
+        // If PIP is not active, show the YouTube panel
+        this.showYTPanel = true;
+      }
+    }
+  }
+
+  toggleShortcuts() {
+    this.showYTPanel = false;
+    this.hidePIP = false;
+    this.showInfo = !this.showInfo;
   }
 
   /** set the state to running and create a new split to indicate the change in state */

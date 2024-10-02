@@ -58,6 +58,10 @@ export class TimestampsComponent implements OnInit, OnDestroy {
     return this.youtube.showYTPanel;
   }
 
+  get hidePIP(): boolean {
+    return this.youtube.hidePIP;
+  }
+
   get videoID(): string|null {
     if(this.youtube.URL) {
       const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -102,8 +106,14 @@ export class TimestampsComponent implements OnInit, OnDestroy {
       this.youtubeApiLoaded = true;
     }
     this.youtubeServiceSubscription = this.youtube.seekToObservable.subscribe(time => {
-      this.player.seekTo(time, true);
-      this.player.playVideo();
+      if(this.player) {
+        if(typeof time === "undefined" || time == null) {
+          this.player.pauseVideo();
+        } else {
+          this.player.seekTo(time, true);
+          this.player.playVideo();
+        }
+      }
     });
   }
 

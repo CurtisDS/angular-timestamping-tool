@@ -2,7 +2,7 @@
 <app-controls class="controls" [name]="name"></app-controls>
 <div class="content">
   <ng-container *ngIf="viewState === ViewStates.Edit">
-    <div id="youtubeEmbed" *ngIf="youtubeURL" [attr.show-video]="showYTPanel">
+    <div id="youtubeEmbed" *ngIf="youtubeURL" [attr.show-video]="showYTPanel" [class.hide]="!showYTPanel && hidePIP">
       <div class="dragable mat-primary-custom" appDraggable>
         <youtube-player #player
           class="player"

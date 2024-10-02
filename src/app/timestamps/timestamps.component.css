@@ -86,3 +86,7 @@
   margin: -6px auto 0px;
   max-width: 530px;
 }
+
+.hide {
+  display: none;
+}
