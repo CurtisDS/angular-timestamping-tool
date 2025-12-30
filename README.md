@@ -9,7 +9,3 @@ An app to allow you to create timestamps
 `Ctrl`+`Z` - Undo
 
 `Ctrl`+`Y` - Redo
-
-### Screenshot
-
-![screenshot 1](https://raw.githubusercontent.com/CurtisDS/Angular-Timestamping-Tool/main/screenshot1.png)
