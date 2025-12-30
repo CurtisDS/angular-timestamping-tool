@@ -1,10 +1,12 @@
 import { Component, HostListener, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import { TimesService } from './services/times.service';
+import { SavedTime, TimesService } from './services/times.service';
 import { ViewState, SortState, ViewStateService } from './services/view-state.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { YoutubeService } from './services/youtube.service';
 import { YouTubePlayer } from '@angular/youtube-player';
 import { Subscription } from 'rxjs';
+import moment from 'moment';
+import { ImportService } from './services/import.service';
 
 @Component({
   selector: 'app-timestamps',
@@ -16,7 +18,8 @@ export class TimestampsComponent implements OnInit, OnDestroy {
     public timeservice: TimesService,
     public viewstateservice: ViewStateService,
     private clipboard: Clipboard,
-    private youtube: YoutubeService
+    private youtube: YoutubeService,
+    private importservice: ImportService
   ) {}
 
   @ViewChild("player") player: YouTubePlayer;
@@ -75,6 +78,22 @@ export class TimestampsComponent implements OnInit, OnDestroy {
   get ytTimeProgress(): string {
     if(typeof this.player === "undefined" || this.player === null) return "";
     return this.convertSecondsToYTTimestring(this.player.getCurrentTime()) + "/" + this.convertSecondsToYTTimestring(this.player.getDuration());
+  }
+
+  insertSplitAtTYSeek() {
+    if(typeof this.player === "undefined" || this.player === null) return;
+    const seconds = this.player.getCurrentTime();
+    if(typeof seconds === "undefined") return;
+    const wasStarted = this.timeservice.times?.length !== 0;
+    if(!wasStarted) {
+      const secondsOffset = this.player.getDuration();
+      const momentTime = moment().clone().subtract(secondsOffset, "seconds");
+      this.timeservice.addTime(new SavedTime(momentTime, 'Start'));      
+      this.importservice.requireClockUpdate = true;
+    }
+    if(wasStarted || !wasStarted && seconds != 0) {
+      this.timeservice.insertTime(seconds);
+    }
   }
 
   convertSecondsToYTTimestring(seconds: number): string {

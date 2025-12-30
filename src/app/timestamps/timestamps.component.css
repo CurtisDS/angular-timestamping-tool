@@ -85,8 +85,26 @@
   background-color: black;
   margin: -6px auto 0px;
   max-width: 530px;
+  user-select: text;
+  cursor: default;
 }
 
 .hide {
   display: none;
+}
+
+.small-btn {
+	width: 32px;
+	height: 32px;
+	min-width: 32px;
+	min-height: 32px;
+	padding: 0;
+	line-height: 32px;
+}
+
+.small-btn mat-icon {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
 }

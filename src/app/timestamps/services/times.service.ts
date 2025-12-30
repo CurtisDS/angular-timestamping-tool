@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Moment } from 'moment';
 import moment from 'moment';
+import { ImportService } from './import.service';
 
 /** a class to represent a {@link value time split/timestamp}, its {@link label description}, and its {@link offsetSeconds offset} */
 export class SavedTime {
@@ -38,7 +39,7 @@ export enum TimestampState {
  })
 export class TimesService {
 
-  constructor() {
+  constructor(private importservice:ImportService) {
     // if the browser supports local storage
     if (typeof(Storage) !== "undefined") {
       // check local storage to see if there was a previous view state and use that if it exists
@@ -114,6 +115,130 @@ export class TimesService {
   /** add a time split to the {@link times} list */
   addTime(time: SavedTime) {
     this._times.push(time);
+    this.historyCheckForChanges();
+  }
+  
+  /**
+   * Shift a SavedTime's value and offset in opposite directions so that
+   * its adjusted time (value + offset) remains unchanged.
+   *
+   * The shift is always applied in whole seconds so that offsetSeconds
+   * remains an integer.
+   *
+   * @param t The SavedTime to modify
+   * @param deltaSeconds Number of seconds to shift the value (must be integer)
+   */
+  private shiftValueKeepAdjusted(t: SavedTime, deltaSeconds: number) {
+    if (!deltaSeconds) return;
+
+    t.value = t.value.clone().add(deltaSeconds, "seconds");
+    t.offsetSeconds = (t.offsetSeconds || 0) - deltaSeconds;
+  }
+
+  /**
+   * Clamp a SavedTime's value between two adjusted-time bounds while keeping
+   * its adjusted time constant.
+   *
+   * This ensures the value→adjusted correction interval does not cross
+   * neighboring adjusted times.
+   *
+   * Bounds are inclusive, allowing zero spacing between adjusted times.
+   *
+   * @param t The SavedTime to clamp
+   * @param minBound The earliest allowed value (usually previous adjusted time)
+   * @param maxBound The latest allowed value (usually next adjusted time)
+   */
+  private clampValueKeepAdjusted(
+    t: SavedTime,
+    minBound?: Moment,
+    maxBound?: Moment
+  ) {
+    const currentValue = t.value;
+    let targetValue = currentValue;
+
+    if (minBound && targetValue.isBefore(minBound)) {
+      targetValue = minBound;
+    }
+
+    if (maxBound && targetValue.isAfter(maxBound)) {
+      targetValue = maxBound;
+    }
+
+    if (!targetValue.isSame(currentValue)) {
+      // integer delta only
+      const deltaSeconds = targetValue.diff(currentValue, "seconds");
+      this.shiftValueKeepAdjusted(t, deltaSeconds);
+    }
+  }
+
+  /**
+   * Repair a SavedTime at the given index so that its correction interval
+   * does not overlap the adjusted times of its immediate neighbors.
+   *
+   * The adjusted time of the SavedTime is preserved.
+   *
+   * @param index Index of the SavedTime to repair
+   */
+  private repairIndex(index: number) {
+    const t = this._times[index];
+    if (!t) return;
+
+    const prevAdjusted =
+      index > 0 ? this._times[index - 1].getAdjustedTime() : undefined;
+
+    const nextAdjusted =
+      index + 1 < this._times.length
+        ? this._times[index + 1].getAdjustedTime()
+        : undefined;
+
+    this.clampValueKeepAdjusted(t, prevAdjusted, nextAdjusted);
+  }
+
+  /**
+   * Insert a new {@link SavedTime} into the {@link times} list based on a relative number of seconds from the
+   * {@link startTime start time}.
+   *
+   * The new SavedTime:
+   * - is inserted in chronological order by adjusted time
+   * - defaults to have no offsetSeconds
+   *
+   * After insertion, neighboring SavedTimes are repaired so that:
+   * - adjusted times never change
+   * - no correction interval overlaps another adjusted time
+   *
+   * @param seconds Seconds after the {@link startTime start time} for the new split
+   * @param label Optional label for the split
+   * @param offset Optional offset for the split
+   */
+  insertTime(seconds: number, label?: string, offset?: number) {
+    if (typeof seconds === "undefined" || seconds == null) return;
+  
+    const value = this.startTime
+      .getAdjustedTime()
+      .clone()
+      .add(seconds, "seconds");
+  
+    const newTime = new SavedTime(value, label, offset);
+    const newAdjusted = newTime.getAdjustedTime();
+  
+    let insertIndex = this._times.findIndex(t =>
+      newAdjusted.isBefore(t.getAdjustedTime())
+    );
+  
+    if (insertIndex === -1) {
+      insertIndex = this._times.length;
+    }
+  
+    this._times.splice(insertIndex, 0, newTime);
+  
+    // Repair neighbors around the insertion point
+    this.repairIndex(insertIndex - 1);
+    this.repairIndex(insertIndex + 1);
+  
+    // Optional extra safety for cascading edge cases
+    this.repairIndex(insertIndex - 2);
+    this.repairIndex(insertIndex + 2);
+  
     this.historyCheckForChanges();
   }
 
@@ -219,7 +344,7 @@ export class TimesService {
 
   /** undo the last change */
   undoLastChange() {
-    if(this.undoHistoryIndex > 0) {
+    if(this.undoHistoryIndex > 0 && this.importservice.cancelImport()) {
       this.undoHistoryIndex--;
       // get json string from history
       let newState = this.undoHistory[this.undoHistoryIndex];

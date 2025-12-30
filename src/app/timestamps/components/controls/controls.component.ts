@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener, Input, HostBinding } from '
 import { SavedTime, TimesService, TimestampState } from '../../services/times.service';
 import { SortState, ViewState, ViewStateService } from '../../services/view-state.service';
 import { YoutubeService } from '../../services/youtube.service';
+import { CancelMode, ImportService } from '../../services/import.service';
 import moment from 'moment';
 
 @Component({
@@ -10,7 +11,7 @@ import moment from 'moment';
   styleUrls: ['./controls.component.css'],
 })
 export class ControlsComponent implements OnInit, OnDestroy {
-  constructor(private timeservice: TimesService, private viewstateservice: ViewStateService, private youtube: YoutubeService) {}
+  constructor(private timeservice: TimesService, private viewstateservice: ViewStateService, private youtube: YoutubeService, private importservice: ImportService) {}
 
   /** the heading to use in this component */
   @Input() name: string;
@@ -22,7 +23,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   /** a timer to update the {@link dateString} and {@link timeString} and save history occasionally */
   interval: any;
 
-  /** a value which will be compared to {@link historyInterval} to determin if enough cycles of the {@link interval timer} have passed in order to tigger the history update */
+  /** a value which will be compared to {@link historyInterval} to determine if enough cycles of the {@link interval timer} have passed in order to trigger the history update */
   historyIntervalTrigger = 10;
   /** only trigger a history update in the {@link interval timer} every {@link historyIntervalTrigger X} number of cycles  */
   historyInterval = 0;
@@ -31,36 +32,63 @@ export class ControlsComponent implements OnInit, OnDestroy {
   showInfo = false;
 
   /** current ui state is importing old timestamps */
-  importing = false;
+  get importing(): boolean {
+    return this.importservice.importing;
+  }
+
+  /** set the current ui state to importing old timestamps */
+  set importing(val: boolean) {
+    this.importservice.importing = val;
+  }
+
+  /** current ui state is importing old timestamps */
+  get importChapters(): string {
+    return this.importservice.importChapters;
+  }
+
+  /** set the current ui state to importing old timestamps */
+  set importChapters(val: string) {
+    this.importservice.importChapters = val;
+  }
+
   @HostBinding('style.flex') get flexStyle(): string {
     return this.importing ? '1 0 auto' : null;
   }
-  importChapters = ""
+
+  /** Set the {@link timeString time} and {@link dateString date} strings */
+  private setTimeClock() {
+    let now = moment();
+    let dif = this.timeservice.getDiff(now);
+    this.timeString = dif.format('HH:mm:ss');
+    this.dateString = now.format('MMM DD HH:mm:ss');    
+    this.importservice.requireClockUpdate = false;
+  }
+
+  /** Reset the {@link timeString time} and {@link dateString date} strings */
+  private resetTimeClock() {
+    this.timeString = '00:00:00';
+    this.dateString = moment().format('MMM DD HH:mm:ss');    
+    this.importservice.requireClockUpdate = false;
+  }
 
   ngOnInit() {
-    // initialize the timestring to zeros
-    this.timeString = '00:00:00';
-    // initialize the datestring to now
-    this.dateString = moment().format('MMM DD HH:mm:ss');
+    // initialize the timestring and dateString
+    this.resetTimeClock();
 
     // create the timer to run ever 0.1 seconds
     this.interval = setInterval(() => {
       if (this.timeservice.times?.length > 0) {
-        // if there are splits and the current state is Running update the time and date strings
-        if(this.timeservice.state == TimestampState.Running) {
-          let now = moment();
-          let dif = this.timeservice.getDiff(now);
-          this.timeString = dif.format('HH:mm:ss');
-          this.dateString = now.format('MMM DD HH:mm:ss');
+        // if there are splits and the current state is Running then update the time and date strings
+        if(this.timeservice.state == TimestampState.Running || this.importservice.requireClockUpdate) {
+          this.setTimeClock();
         }
       } else {
         // there are no splits, reinitialize the time and date strings
-        this.timeString = '00:00:00';
-        this.dateString = moment().format('MMM DD HH:mm:ss');
+        this.resetTimeClock();
       }
       // increase the history interval
       this.historyInterval++;
-      // if we pass the tigger amount run the check for changes, it would be too much to check every 0.1s so only check ever X number of cycles
+      // if we pass the trigger amount run the check for changes, it would be too much to check every 0.1s so only check every X number of cycles
       if(this.historyInterval > this.historyIntervalTrigger) {
         // reset the interval
         this.historyInterval = 0;
@@ -128,6 +156,21 @@ export class ControlsComponent implements OnInit, OnDestroy {
   /** event listener for when CTRL+Z is pressed to perform an undo */
   @HostListener('window:keydown.control.z', ['$event'])
   undo(event: KeyboardEvent) {
+    const target = event.target as HTMLElement | null;
+  
+    if(
+      target &&
+      (
+        target.tagName === 'TEXTAREA' ||
+        (target.tagName === 'INPUT' &&
+          (target as HTMLInputElement).type === 'text') ||
+        target.isContentEditable
+      )
+    ) {
+      return;
+    }
+  
+    event.preventDefault();
     this.timeservice.undoLastChange();
   }
 
@@ -135,6 +178,21 @@ export class ControlsComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown.shift.control.z', ['$event'])
   @HostListener('window:keydown.control.y', ['$event'])
   redo(event: KeyboardEvent) {
+    const target = event.target as HTMLElement | null;
+  
+    if(
+      target &&
+      (
+        target.tagName === 'TEXTAREA' ||
+        (target.tagName === 'INPUT' &&
+          (target as HTMLInputElement).type === 'text') ||
+        target.isContentEditable
+      )
+    ) {
+      return;
+    }
+  
+    event.preventDefault();
     this.timeservice.redoLastChange();
   }
 
@@ -183,38 +241,40 @@ export class ControlsComponent implements OnInit, OnDestroy {
       this.showYTPanel = false;
       
       // Check if there is a valid URL
-      if (this.youtube.URL && this.youtube.URL.length > 0) {
+      if (this.youtube.URL && this.youtube.URL.length > 0 && this.viewstateservice.state === ViewState.Edit) {
         // Show PIP mode (set hidePIP to false to show it)
         this.hidePIP = false;
       } else {
-        // No valid URL, so just close the PIP as well
+        // No valid URL, or we are in Code View so just close the PIP as well
         this.hidePIP = true;
       }
     } 
     // If the YouTube panel is closed
     else {
       // Check if PIP is currently active
-      if (!this.hidePIP) {
-        // If PIP is active, close it
+      if (!this.hidePIP && this.viewstateservice.state === ViewState.Edit) {
+        // If PIP is active and we are in Edit view so close the PIP
         this.hidePIP = true;
       } else {
-        // If PIP is not active, show the YouTube panel
+        // If PIP might be active if we are in Code view so close it
+        this.hidePIP = true;
+        // show the YouTube panel
         this.showYTPanel = true;
+        // Switch to edit view because code view hides the youtube preview
+        this.viewstateservice.updateViewState(ViewState.Edit);
       }
     }
   }
 
   toggleShortcuts() {
     this.showYTPanel = false;
-    this.hidePIP = false;
+    this.hidePIP = true;
     this.showInfo = !this.showInfo;
   }
 
   /** set the state to running and create a new split to indicate the change in state */
   play() {
-    // remove any unimported chapters and turn off importing mode
-    this.importChapters = "";
-    this.importing = false;
+    if(!this.importservice.cancelImport()) return;
     // set new state
     this.timeservice.state = TimestampState.Running;
     if (this.timeservice.times?.length === 0) {
@@ -272,19 +332,33 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   /** Function to convert a timecode in the format "HH:mm:ss" to a number of seconds */
   timecodeToSeconds(timecode: string) {
-    // Split the timecode into hours, minutes, and seconds
-    const [hours, minutes, seconds] = timecode.split(':').map(Number);
-    // Convert the hours, minutes, and seconds to a timestamp in seconds
-    return (hours * 3600) + (minutes * 60) + seconds;
+    // Multipliers for seconds, minutes, and hours (right to left)
+    const multipliers = [1, 60, 3600];
+  
+    // Split the timecode by ":" into numeric parts
+    // Reverse so we start with seconds, then minutes, then hours
+    const parts = timecode
+      .split(':')
+      .map(Number)
+      .reverse();
+  
+    // Reject unsupported formats (anything beyond H:m:s)
+    if (parts.length > 3) {
+      throw new Error('Invalid timecode format');
+    }
+  
+    // Convert each part to seconds using its corresponding multiplier
+    // and sum the total
+    return parts.reduce((total, value, index) => {
+      return total + value * multipliers[index];
+    }, 0);
   }
 
   /** flip between import state and not, if it was import state, then parse the contents of the textarea for timestamps */
   import() {
     if(!this.importing) {
-      this.importChapters = "";
-      this.importing = true;
+      this.importservice.startImport();
     } else {
-      this.importing = false;
       if(this.importChapters.trim() != "") {
         // split based on new lines
         const list = this.importChapters.trim().replace("\r", "").split("\n").map((line) => {
@@ -307,7 +381,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
           const momentTime = now.clone().subtract(secondsOffset, "seconds");
           this.timeservice.addTime(new SavedTime(momentTime, item.label));
         });
+        this.importservice.requireClockUpdate = true;
       }
+      this.importservice.cancelImport(CancelMode.Never);
     }
   }
 }

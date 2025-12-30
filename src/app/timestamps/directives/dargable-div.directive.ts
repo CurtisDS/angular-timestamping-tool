@@ -12,6 +12,13 @@ export class DraggableDirective {
   constructor(private el: ElementRef) {}
 
   @HostListener('mousedown', ['$event']) onMouseDown(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    // prevent dragging when clicking the timecode
+    if (target.closest('.timecode')) {
+      return;
+    }
+    
     const computedStyle = window.getComputedStyle(this.el.nativeElement);
     if (computedStyle.position === 'fixed' || computedStyle.position === 'absolute') {
       this.isDragging = true;

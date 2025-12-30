@@ -57,12 +57,16 @@
         <!--edit state-->
       </button>
     </div>
+    <!-- youtube button -->
+    <button class="collapsible-controls-menu-button" *ngIf="youtubeURL" mat-icon-button color="none" title="view youtube input" (click)="toggleYT()">
+      <mat-icon>smart_display</mat-icon>
+    </button>
     <button class="collapsible-controls-menu-button" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu class="collapsible-controls-menu" #menu="matMenu">
       <!-- youtube button -->
-      <button mat-menu-item color="none" title="view youtube input" (click)="toggleYT()">
+      <button  *ngIf="!youtubeURL" mat-menu-item color="none" title="view youtube input" (click)="toggleYT()">
         <mat-icon>smart_display</mat-icon>
         <span>Toggle YouTube</span>
       </button>
@@ -94,7 +98,6 @@
         <!--edit state-->
       </button>
     </mat-menu>
-    
   </mat-toolbar-row>
   <mat-toolbar-row class="row hidden-row" *ngIf="showInfo">
     <!-- flex spacer -->
